@@ -2,6 +2,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 import time
+import logging
+import allure
 
 class AdminPage:
     def __init__(self, browser, base_url, token):
@@ -9,11 +11,16 @@ class AdminPage:
         self.browser = browser
         self.base_url = base_url
         self.token = token
+        self.logger = logging.getLogger(__name__)  # Создание логгера для этого класса
 
+    @allure.step("Open admin page")
     def get_admin_page(self):
-        self. browser.get(self.base_url + '/administration/index.php?route=common/dashboard&user_token=' + self.token)
+        self.logger.info("Opening admin page")
+        self.browser.get(self.base_url + '/administration/index.php?route=common/dashboard&user_token=' + self.token)
 
+    @allure.step("Add product page")
     def add_product_page(self, product_name):
+        self.logger.info("Adding product page")
         self.product_name = product_name
         self.browser.get(self.base_url + '/administration/index.php?route=catalog/product.form&user_token=' + self.token)
         input_product_name = self.browser.find_element(By.XPATH, '//*[@id="input-name-1"]')
@@ -56,7 +63,9 @@ class AdminPage:
         saved_product_name = self.browser.find_element(By.XPATH, "//*[@id='form-product']/div[1]/table/tbody/tr/td[3]").text
         return saved_product_name
 
+    @allure.step("Delete product")
     def delete_product(self):
+        self.logger.info("Deleting product")
         self.browser.get(self.base_url + '/administration/index.php?route=catalog/product&user_token=' + self.token)
         input_filter = self.browser.find_element(By.XPATH, '//*[@id="input-name"]')
         input_filter.send_keys(self.product_name)
@@ -76,7 +85,6 @@ class AdminPage:
         time.sleep(1)
         no_result = self.browser.find_element(By.XPATH, "//*[@id='form-product']/div[1]/table/tbody/tr/td").text
         return no_result
-
 
 
 

@@ -3,11 +3,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
-
 def test_logo(browser, base_url):
     browser.get(base_url)
-    logo = WebDriverWait(browser, 10).until(expected_conditions.presence_of_element_located((By.XPATH, '//*[@id="logo"]/a/img')))
-    assert logo
+    assert WebDriverWait(browser, 10).until(expected_conditions.presence_of_element_located((By.ID, 'logo')))
 
 
 def test_banner(browser):
